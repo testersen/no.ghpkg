@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "no.ghpkg"
-version = System.getenv().getOrDefault("VERSION", "UNVERSIONED")
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -20,6 +20,7 @@ gradlePlugin {
             displayName = "Github Packages Repositories"
             description = "Quickly with common format add github package repositories"
             implementationClass = "no.ghpkg.GithubPackagesPlugin"
+            @Suppress("UnstableApiUsage") tags.set(listOf("ghpkg"))
         }
     }
 }
