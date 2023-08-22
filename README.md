@@ -8,7 +8,7 @@ import no.ghpkg.github
 
 plugins {
     kotlin("jvm") version "1.9.0"
-    id("no.ghpkg")
+    id("no.ghpkg") version "0.1.0"
     `maven-publish`
 }
 
@@ -17,7 +17,7 @@ version = System.getenv().getOrDefault("VERSION", "UNVERSIONED")
 
 repositories {
     mavenCentral()
-    github("octocat", "hello-world")
+    git.hub("octocat", "hello-world")
 }
 
 configure<PublishingExtension> {
