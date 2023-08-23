@@ -11,6 +11,9 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+}
+
 gradlePlugin {
     @Suppress("UnstableApiUsage") website.set("https://github.com/testersen/no.ghpkg")
     @Suppress("UnstableApiUsage") vcsUrl.set("https://github.com/testersen/no.ghpkg")
