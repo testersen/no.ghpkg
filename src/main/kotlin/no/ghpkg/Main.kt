@@ -30,14 +30,24 @@ private val INVALID_CHARS = Regex("[^A-Za-z0-9_.]+")
 private fun fixRepoName(name: String) = name.replace(INVALID_CHARS, "-")
 
 open class Git(private val project: Project, private val repositories: RepositoryHandler) {
+	internal val usernameNullable: String? =
+		project.findProperty("gpr.actor") as String? ?: System.getenv("GITHUB_ACTOR")
+	internal val passwordNullable: String? =
+		project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+
+	internal val username
+		get() = usernameNullable
+			?: throw Exception("\$GITHUB_ACTOR (or gpr.actor from ~/.gradle/gradle.properties) was not found!")
+	internal val password
+		get() = passwordNullable
+			?: throw Exception("\$GITHUB_TOKEN (or gpr.token from ~/.gradle/gradle.properties) was not found!")
+
 	fun hub(owner: String, repository: String): MavenArtifactRepository = repositories.maven { repo ->
 		repo.name = fixRepoName("GithubPackages $owner/$repository")
 		repo.url = URI.create("https://maven.pkg.github.com/$owner/$repository")
-		repo.credentials { cred ->
-			cred.username = project.findProperty("gpr.actor") as String? ?: System.getenv("GITHUB_ACTOR")
-				?: throw Exception("\$GITHUB_ACTOR (or gpr.actor from ~/.gradle/gradle.properties) was not found!")
-			cred.password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
-				?: throw Exception("\$GITHUB_TOKEN (or gpr.token from ~/.gradle/gradle.properties) was not found!")
+		repo.credentials {
+			it.username = username
+			it.password = password
 		}
 	}
 }
@@ -47,6 +57,7 @@ open class Github(project: Project, repositories: RepositoryHandler) : Git(proje
 	 * Calls [Git.hub] with the owner and repository based on the `GITHUB_`
 	 */
 	fun actions() {
+		if ((System.getenv("GITHUB_ACTIONS") ?: "false") != "true") return
 		val (owner, repository) = System.getenv("GITHUB_REPOSITORY_NAMESPACE")?.split("/")
 			?: throw Exception("\$GITHUB_REPOSITORY_NAMESPACE is missing from the environment variables! In CI/CD set this to \${{ github.repository }}")
 		this.hub(owner, repository)
