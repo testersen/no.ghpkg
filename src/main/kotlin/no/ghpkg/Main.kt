@@ -58,8 +58,8 @@ open class Github(project: Project, repositories: RepositoryHandler) : Git(proje
 	 */
 	fun actions() {
 		if ((System.getenv("GITHUB_ACTIONS") ?: "false") != "true") return
-		val (owner, repository) = System.getenv("GITHUB_REPOSITORY_NAMESPACE")?.split("/")
-			?: throw Exception("\$GITHUB_REPOSITORY_NAMESPACE is missing from the environment variables! In CI/CD set this to \${{ github.repository }}")
+		val (owner, repository) = System.getenv("GITHUB_REPOSITORY")?.split("/")
+			?: throw Exception("\$GITHUB_REPOSITORY is missing from the environment variables! In CI/CD set this to \${{ github.repository }}")
 		this.hub(owner, repository)
 	}
 }
