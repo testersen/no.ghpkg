@@ -16,16 +16,12 @@ class GithubPackagesPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		installOn(project, project.repositories)
 		project.plugins.withType(PublishingPlugin::class.java) {
-			installOn(project, project.extensions.getByType(PublishingExtension::class.java))
+			installOn(project, project.extensions.getByType(PublishingExtension::class.java).repositories)
 		}
 	}
 
 	private fun installOn(project: Project, repositories: RepositoryHandler) {
 		(repositories as ExtensionAware).extensions.create("git", Git::class.java, project, repositories)
-	}
-
-	private fun installOn(project: Project, publishing: PublishingExtension) {
-		installOn(project, publishing.repositories)
 	}
 }
 
