@@ -16,12 +16,21 @@ class GithubPackagesPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		installOn(project, project.repositories)
 		project.plugins.withType(PublishingPlugin::class.java) {
-			installOn(project, project.extensions.getByType(PublishingExtension::class.java).repositories)
+			installOn(project, project.extensions.getByType(PublishingExtension::class.java))
 		}
 	}
 
 	private fun installOn(project: Project, repositories: RepositoryHandler) {
 		(repositories as ExtensionAware).extensions.create("git", Git::class.java, project, repositories)
+	}
+
+	private fun installOn(project: Project, publishingExtension: PublishingExtension) {
+		(publishingExtension.repositories as ExtensionAware).extensions.create(
+			"github",
+			Github::class.java,
+			project,
+			publishingExtension.repositories
+		)
 	}
 }
 
@@ -38,5 +47,16 @@ open class Git(private val project: Project, private val repositories: Repositor
 			cred.password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
 				?: throw Exception("\$GITHUB_TOKEN (or gpr.token from ~/.gradle/gradle.properties) was not found!")
 		}
+	}
+}
+
+open class Github(project: Project, repositories: RepositoryHandler) : Git(project, repositories) {
+	/**
+	 * Calls [Git.hub] with the owner and repository based on the `GITHUB_`
+	 */
+	fun actions() {
+		val (owner, repository) = System.getenv("GITHUB_REPOSITORY_NAMESPACE")?.split("/")
+			?: throw Exception("\$GITHUB_REPOSITORY_NAMESPACE is missing from the environment variables! In CI/CD set this to \${{ github.repository }}")
+		this.hub(owner, repository)
 	}
 }
