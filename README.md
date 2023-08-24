@@ -22,7 +22,7 @@ repositories {
 
 configure<PublishingExtension> {
 	repositories {
-		github("example-org", "example-project")
+		git.hub("example-org", "example-project")
 	}
 	publications {
 		register<MavenPublication>("gpr") {
