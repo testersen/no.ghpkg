@@ -7,28 +7,28 @@ standardized credential configuration._
 import no.ghpkg.github
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("no.ghpkg") version "0.1.0"
-    `maven-publish`
+	kotlin("jvm") version "1.9.0"
+	id("no.ghpkg") version "0.1.2"
+	`maven-publish`
 }
 
 group = "org.example"
 version = System.getenv().getOrDefault("VERSION", "UNVERSIONED")
 
 repositories {
-    mavenCentral()
-    git.hub("octocat", "hello-world")
+	mavenCentral()
+	git.hub("octocat", "hello-world")
 }
 
 configure<PublishingExtension> {
-    repositories {
-        github("example-org", "example-project")
-    }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["kotlin"])
-        }
-    }
+	repositories {
+		github("example-org", "example-project")
+	}
+	publications {
+		register<MavenPublication>("gpr") {
+			from(components["kotlin"])
+		}
+	}
 }
 ```
 
