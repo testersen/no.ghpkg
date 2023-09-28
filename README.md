@@ -5,8 +5,6 @@ to your `build.gradle(.kts?)` file with a standardized credential
 configuration._
 
 ```kotlin
-import no.ghpkg.github
-
 plugins {
 	kotlin("jvm") version "1.9.0"
 	id("no.ghpkg") version "0.1.2"
