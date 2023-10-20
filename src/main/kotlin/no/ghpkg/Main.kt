@@ -14,7 +14,7 @@ import java.net.URI
 class GithubPackagesPlugin : Plugin<Project> {
 
 	override fun apply(project: Project) {
-		project.extensions.create
+		project.extensions.create("versioning", Versioning::class.java)
 		installOn(project, project.repositories)
 		project.plugins.withType(PublishingPlugin::class.java) {
 			installOn(project, project.extensions.getByType(PublishingExtension::class.java).repositories)
