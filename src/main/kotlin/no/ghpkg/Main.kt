@@ -42,19 +42,21 @@ open class Git(private val project: Project, private val repositories: Repositor
 		get() = passwordNullable
 			?: throw Exception("\$GITHUB_TOKEN (or gpr.token from ~/.gradle/gradle.properties) was not found!")
 
-	fun hub(owner: String, repository: String): MavenArtifactRepository = repositories.maven { repo ->
-		repo.name = fixRepoName("GithubPackages $owner/$repository")
-		repo.url = URI.create("https://maven.pkg.github.com/$owner/$repository")
+	fun hub(owner: String, repository: String?): MavenArtifactRepository = repositories.maven { repo ->
+		repo.name = fixRepoName("GithubPackages $owner${repository?.let { "/$it" }}")
+		repo.url = URI.create("https://maven.pkg.github.com/$owner${repository?.let { "/$it" }}")
 		repo.credentials {
 			it.username = username
 			it.password = password
 		}
 	}
+
+	fun hub(owner: String) = hub(owner, null)
 }
 
 open class Github(project: Project, repositories: RepositoryHandler) : Git(project, repositories) {
 	/**
-	 * Calls [Git.hub] with the owner and repository based on the `GITHUB_`
+	 * Calls [Git.hub] with the owner and repository based on the `GITHUB_` environment variables.
 	 */
 	fun actions() {
 		if ((System.getenv("GITHUB_ACTIONS") ?: "false") != "true") return
