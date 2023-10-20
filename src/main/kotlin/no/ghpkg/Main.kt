@@ -27,7 +27,7 @@ class GithubPackagesPlugin : Plugin<Project> {
 	}
 }
 
-class Versioning {
+open class Versioning {
 	/**
 	 * Returns the content of environment variable `VERSION` if it is defined,
 	 * `"UNVERSIONED"` otherwise.
