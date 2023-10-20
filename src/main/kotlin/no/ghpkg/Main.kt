@@ -14,6 +14,7 @@ import java.net.URI
 class GithubPackagesPlugin : Plugin<Project> {
 
 	override fun apply(project: Project) {
+		project.extensions.create
 		installOn(project, project.repositories)
 		project.plugins.withType(PublishingPlugin::class.java) {
 			installOn(project, project.extensions.getByType(PublishingExtension::class.java).repositories)
@@ -23,6 +24,16 @@ class GithubPackagesPlugin : Plugin<Project> {
 	private fun installOn(project: Project, repositories: RepositoryHandler) {
 		(repositories as ExtensionAware).extensions.create("git", Git::class.java, project, repositories)
 		(repositories as ExtensionAware).extensions.create("github", Github::class.java, project, repositories)
+	}
+}
+
+class Versioning {
+	/**
+	 * Returns the content of environment variable `VERSION` if it is defined,
+	 * `"UNVERSIONED"` otherwise.
+	 */
+	fun environment(): String {
+		return System.getenv("VERSION") ?: "UNVERSIONED"
 	}
 }
 
