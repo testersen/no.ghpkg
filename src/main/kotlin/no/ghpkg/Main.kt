@@ -54,8 +54,8 @@ open class Git(private val project: Project, private val repositories: Repositor
 			?: throw Exception("\$GITHUB_TOKEN (or gpr.token from ~/.gradle/gradle.properties) was not found!")
 
 	fun hub(owner: String, repository: String = "*"): MavenArtifactRepository = repositories.maven { repo ->
-		repo.name = fixRepoName("GithubPackages $owner$repository")
-		repo.url = URI.create("https://maven.pkg.github.com/$owner$repository")
+		repo.name = fixRepoName("GithubPackages $owner/$repository")
+		repo.url = URI.create("https://maven.pkg.github.com/$owner/$repository")
 		repo.credentials {
 			it.username = username
 			it.password = password
