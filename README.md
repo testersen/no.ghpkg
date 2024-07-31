@@ -1,5 +1,9 @@
 # Github Packages Gradle
 
+> [!IMPORTANT]
+>
+> This repository is archived in favor of [TelenorNorway/sh.tnn](https://github.com/TelenorNorway/sh.tnn)
+
 _Easily add [GitHub Packages Repository](https://github.com/features/packages)
 to your `build.gradle(.kts?)` file with a standardized credential
 configuration._
